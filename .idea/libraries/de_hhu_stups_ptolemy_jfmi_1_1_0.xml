@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="de.hhu.stups:ptolemy-jfmi:1.1.0" type="repository">
+    <properties maven-id="de.hhu.stups:ptolemy-jfmi:1.1.0" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/ptolemy-jfmi-1.1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jna-3.4.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
