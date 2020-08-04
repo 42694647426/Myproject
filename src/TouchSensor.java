@@ -1,31 +1,32 @@
 import org.neuroph.core.NeuralNetwork;
 import org.neuroph.core.data.DataSet;
 import org.neuroph.core.data.DataSetRow;
+
 import org.neuroph.nnet.MultiLayerPerceptron;
 import org.neuroph.nnet.learning.MomentumBackpropagation;
 import org.neuroph.util.TransferFunctionType;
 
 
 
-public class MyBatterySensor {
+public class TouchSensor {
 
     public NeuralNetwork ann;
     double[][] traindata;
 
-    public MyBatterySensor(double[][] traindata) {
+    public TouchSensor(double[][] traindata) {
         this.traindata = traindata;
         ann = this.build();
     }
 
     private NeuralNetwork build() {
         // create multi layer perceptron
-        MultiLayerPerceptron myMlPerceptron = new MultiLayerPerceptron(TransferFunctionType.SIGMOID,  1, 4,8, 3);
+        MultiLayerPerceptron myMlPerceptron = new MultiLayerPerceptron(TransferFunctionType.SIGMOID,  2, 4, 3);
         // enable batch if using MomentumBackpropagation
         if (myMlPerceptron.getLearningRule() instanceof MomentumBackpropagation) {
+            ((MomentumBackpropagation) myMlPerceptron.getLearningRule()).setMaxIterations(1000);
             ((MomentumBackpropagation) myMlPerceptron.getLearningRule()).setBatchMode(true);
-           // ((MomentumBackpropagation) myMlPerceptron.getLearningRule()).setMaxIterations(1000);
             myMlPerceptron.randomizeWeights();
-           // myMlPerceptron.connectInputsToOutputs();
+            myMlPerceptron.connectInputsToOutputs();
         }
         //myMlPerceptron.connectInputsToOutputs();
         return myMlPerceptron;
@@ -33,7 +34,7 @@ public class MyBatterySensor {
 
     public DataSet CreateSet(double[][] data) {
         //create training set
-        DataSet Set = new DataSet(1, 3);
+        DataSet Set = new DataSet(2, 3);
         double[][] inputData = this.getInputData(data);
         double[][] outputData = this.getOutputData(data);
         for (int i = 0; i < data.length; i++) {
@@ -48,11 +49,11 @@ public class MyBatterySensor {
     }
 
     private double[][] getInputData(double[][] data) {
-        double[][] inputData = new double[data.length][data[0].length - 1];
+        double[][] inputData = new double[data.length][2];
         for (int i = 0; i < data.length; i++) {
-            double[] row = new double[data[0].length - 1];
+            double[] row = new double[2];
             if (data[0].length - 1 >= 0)
-                System.arraycopy(data[i], 0, row, 0, data[0].length - 1);
+                System.arraycopy(data[i], 0, row, 0, 2);
             inputData[i] = row;
         }
         return inputData;
@@ -62,12 +63,15 @@ public class MyBatterySensor {
         double[][] outputData = new double[data.length][3];
         for (int i = 0; i < data.length; i++) {
             double[] row;
-            if (data[i][data[i].length - 1] >= 3.80) {
+            if (data[i][2] >= 3.80) {//right whisker
                 row = new double[]{1, 0, 0};
-            } else if ((data[i][data[i].length - 1] >=3.70) && (data[i][data[i].length - 1] <=3.80)  ) {
+            } else if ((data[i][3] >=3.8)) { //left whisker
                 row = new double[]{0, 1, 0};
-            } else {
+            }
+            else if(data[i][2]>=3.8&&data[i][2] >= 3.80){ //both
                 row = new double[]{0, 0, 1};
+            } else{
+                row = new double[]{0, 0, 0};
             }
             outputData[i] = row;
         }

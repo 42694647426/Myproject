@@ -1,13 +1,9 @@
 import org.neuroph.core.NeuralNetwork;
 import org.neuroph.core.data.DataSet;
 import org.neuroph.core.data.DataSetRow;
-
 import org.neuroph.nnet.MultiLayerPerceptron;
 import org.neuroph.nnet.learning.MomentumBackpropagation;
 import org.neuroph.util.TransferFunctionType;
-
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 
 
@@ -27,6 +23,7 @@ public class LightSensor {
         // enable batch if using MomentumBackpropagation
         if (myMlPerceptron.getLearningRule() instanceof MomentumBackpropagation) {
             ((MomentumBackpropagation) myMlPerceptron.getLearningRule()).setBatchMode(true);
+            myMlPerceptron.randomizeWeights();
         }
         //myMlPerceptron.connectInputsToOutputs();
         return myMlPerceptron;
@@ -63,12 +60,12 @@ public class LightSensor {
         double[][] outputData = new double[data.length][3];
         for (int i = 0; i < data.length; i++) {
             double[] row;
-            if (data[i][data[i].length - 1] >= 3.80) {
-                row = new double[]{1, 0, 0};
-            } else if ((data[i][data[i].length - 1] >=3.70) && (data[i][data[i].length - 1] <=3.80)  ) {
-                row = new double[]{0, 1, 0};
+            if (data[i][data[i].length - 1] == 1) {
+                row = new double[]{1, 0, 0}; // shadow on right
+            } else if (data[i][data[i].length - 1] ==2 ) {
+                row = new double[]{0, 1, 0}; // shadow on left
             } else {
-                row = new double[]{0, 0, 1};
+                row = new double[]{0, 0, 1}; // no shadow
             }
             outputData[i] = row;
         }

@@ -2,7 +2,7 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.neuroph.core.NeuralNetwork;
 import org.neuroph.core.data.DataSet;
 import org.neuroph.core.data.DataSetRow;
-import java.awt.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 

@@ -4,12 +4,7 @@ import org.neuroph.core.data.DataSetRow;
 import org.neuroph.nnet.MultiLayerPerceptron;
 import org.neuroph.util.TransferFunctionType;
 import org.neuroph.nnet.learning.MomentumBackpropagation;
-import org.neuroph.core.transfer.Tanh;
 
-import java.util.Arrays;
-import java.util.Random;
-
-import org.neuroph.core.Layer;
 public class MyBatteryOverTime {
 
     public NeuralNetwork ann;
@@ -22,10 +17,12 @@ public class MyBatteryOverTime {
 
     private NeuralNetwork build() {
 
-        MultiLayerPerceptron myMlPerceptron = new MultiLayerPerceptron(TransferFunctionType.TRAPEZOID, 4, 8, 16, 8, 3);
+        MultiLayerPerceptron myMlPerceptron = new MultiLayerPerceptron(TransferFunctionType.SIGMOID, 4, 16,8, 3);
         if (myMlPerceptron.getLearningRule() instanceof MomentumBackpropagation){
-            ((MomentumBackpropagation) myMlPerceptron.getLearningRule()).setMaxIterations(1000);
+            ((MomentumBackpropagation) myMlPerceptron.getLearningRule()).setMaxIterations(5000);
             ((MomentumBackpropagation) myMlPerceptron.getLearningRule()).setBatchMode(true);
+            myMlPerceptron.randomizeWeights();
+            myMlPerceptron.connectInputsToOutputs();
         }
         return myMlPerceptron;
     }
@@ -92,7 +89,7 @@ public class MyBatteryOverTime {
         return outputData;
     }
 
-    public double testnn(DataSet dataSet, String SetName) { //trainingset
+    public double testnn(DataSet dataSet, String SetName) {
         int count = 0;
         double accuracy = 0;
         for (DataSetRow row : dataSet.getRows()) {
@@ -103,7 +100,6 @@ public class MyBatteryOverTime {
                 count++;
             }
         }
-
         accuracy = count / (double) dataSet.size();
         System.out.println(SetName + " success rate: " + accuracy);
         return accuracy;
