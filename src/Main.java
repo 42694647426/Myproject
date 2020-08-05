@@ -131,7 +131,7 @@ public class Main {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         // first value is the state of charge in percentage
         // second is the output voltage
-        double[][] traindata = BatteryData(579);
+        /**double[][] traindata = BatteryData(1039);
         MyBatterySensor battery = new MyBatterySensor(traindata);
         battery.train();
         DataSet trainset = battery.CreateSet(traindata);
@@ -140,7 +140,7 @@ public class Main {
         KFoldCrossValidation crossvalidation = new KFoldCrossValidation(battery.ann, trainset, 5, 0.01);
         crossvalidation.run();
         crossvalidation.printAllResult();
-        double[][] testdata = BatteryData(367);
+        double[][] testdata = BatteryData(579);
 
         DataSet testset = battery.CreateSet(testdata);
         battery.testnn(testset, "Test Set");
@@ -148,13 +148,13 @@ public class Main {
         //BtteryOverTime
         System.out.println("BatteryTime begins");
 
-        double[][] traindata2 = BatteryTimeData(347);
+        double[][] traindata2 = BatteryTimeData(1347);
         MyBatteryOverTime Batterytime  = new MyBatteryOverTime(traindata2);
         Batterytime.train();
         DataSet trainset2 = Batterytime.CreateSet(traindata2);
         System.out.println("BatteryTime training done");
         Batterytime.testnn(trainset2, "Train Set");
-        double[][] testdata2 = BatteryTimeData(329);
+        double[][] testdata2 = BatteryTimeData(529);
         DataSet testset2 = Batterytime.CreateSet(testdata2);
         Batterytime.testnn(testset2, "Test Set");
         KFoldCrossValidation crossvalidation2 = new KFoldCrossValidation(Batterytime.ann, trainset2, 5, 0.01);
@@ -163,12 +163,12 @@ public class Main {
 
         //touch sensor
         System.out.println("TouchSensor begins");
-        double[][] touchdata = TouchData(539);
+        double[][] touchdata = TouchData(1539);
         TouchSensor touch = new TouchSensor(touchdata);
         touch.train();;
         DataSet touchtrain = touch.CreateSet(touchdata);
         touch.testnn(touchtrain, "train data for touch sensor");
-        double[][] touchdata2 = TouchData(377);
+        double[][] touchdata2 = TouchData(577);
         DataSet touchtest = touch.CreateSet(touchdata2);
         touch.testnn(touchtest, "test data for touch sensor");
         KFoldCrossValidation touchvalidation =  new KFoldCrossValidation(touch.ann, touchtrain, 5, 0.01);
@@ -177,17 +177,20 @@ public class Main {
 
         // light sensor
         System.out.println("LightSensor begins");
-        double[][] lightdata = LightData(637);
+        double[][] lightdata = LightData(1637);
         LightSensor light = new LightSensor(lightdata);
         light.train();;
         DataSet lighttrain = light.CreateSet(lightdata);
         light.testnn(lighttrain, "train data for touch sensor");
-        double[][] lightdata2 = LightData(337);
+        double[][] lightdata2 = LightData(537);
         DataSet lighttest = light.CreateSet(lightdata2);
         light.testnn(lighttest, "test data for touch sensor");
         KFoldCrossValidation lightvalidation =  new KFoldCrossValidation(light.ann, lighttrain, 5, 0.01);
         lightvalidation.run();
         lightvalidation.printAllResult();
+         **/
+        AllTest test = new AllTest("Battery");
+        test.plot(10);
     }
 
 

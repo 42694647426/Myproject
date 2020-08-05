@@ -19,11 +19,12 @@ public class LightSensor {
 
     private NeuralNetwork build() {
         // create multi layer perceptron
-        MultiLayerPerceptron myMlPerceptron = new MultiLayerPerceptron(TransferFunctionType.SIGMOID,  1, 4, 3);
+        MultiLayerPerceptron myMlPerceptron = new MultiLayerPerceptron(TransferFunctionType.SIGMOID,  1, 4,8, 3);
         // enable batch if using MomentumBackpropagation
         if (myMlPerceptron.getLearningRule() instanceof MomentumBackpropagation) {
             ((MomentumBackpropagation) myMlPerceptron.getLearningRule()).setBatchMode(true);
             myMlPerceptron.randomizeWeights();
+            myMlPerceptron.connectInputsToOutputs();
         }
         //myMlPerceptron.connectInputsToOutputs();
         return myMlPerceptron;
