@@ -189,7 +189,7 @@ public class Main {
         lightvalidation.run();
         lightvalidation.printAllResult();
          **/
-        AllTest test = new AllTest("Battery");
+        AllTest test = new AllTest("IsMovable");
         test.plot(10);
     }
 

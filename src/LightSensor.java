@@ -19,7 +19,7 @@ public class LightSensor {
 
     private NeuralNetwork build() {
         // create multi layer perceptron
-        MultiLayerPerceptron myMlPerceptron = new MultiLayerPerceptron(TransferFunctionType.SIGMOID,  1, 4,8, 3);
+        MultiLayerPerceptron myMlPerceptron = new MultiLayerPerceptron(TransferFunctionType.SIGMOID,  1, 4,8, 2);
         // enable batch if using MomentumBackpropagation
         if (myMlPerceptron.getLearningRule() instanceof MomentumBackpropagation) {
             ((MomentumBackpropagation) myMlPerceptron.getLearningRule()).setBatchMode(true);
@@ -32,7 +32,7 @@ public class LightSensor {
 
     public DataSet CreateSet(double[][] data) {
         //create training set
-        DataSet Set = new DataSet(1, 3);
+        DataSet Set = new DataSet(1, 2);
         double[][] inputData = this.getInputData(data);
         double[][] outputData = this.getOutputData(data);
         for (int i = 0; i < data.length; i++) {
@@ -62,11 +62,11 @@ public class LightSensor {
         for (int i = 0; i < data.length; i++) {
             double[] row;
             if (data[i][data[i].length - 1] == 1) {
-                row = new double[]{1, 0, 0}; // shadow on right
+                row = new double[]{1, 0}; // shadow on right
             } else if (data[i][data[i].length - 1] ==2 ) {
-                row = new double[]{0, 1, 0}; // shadow on left
+                row = new double[]{0, 1}; // shadow on left
             } else {
-                row = new double[]{0, 0, 1}; // no shadow
+                row = new double[]{0, 0}; // no shadow
             }
             outputData[i] = row;
         }

@@ -63,15 +63,15 @@ public class TouchSensor {
         double[][] outputData = new double[data.length][3];
         for (int i = 0; i < data.length; i++) {
             double[] row;
-            if (data[i][2] >= 3.80) {//right whisker
+            if (data[i][2] >= 10) {//right whisker
                 row = new double[]{1, 0, 0};
-            } else if ((data[i][3] >=3.8)) { //left whisker
+            } else if ((data[i][3] >=10)) { //left whisker
                 row = new double[]{0, 1, 0};
             }
-            else if(data[i][2]>=3.8&&data[i][2] >= 3.80){ //both
+            else if(data[i][2]>=5 &&data[i][3] >= 10){ //both
                 row = new double[]{0, 0, 1};
             } else{
-                row = new double[]{0, 0, 0};
+                row = new double[]{0, 0, 0};//none
             }
             outputData[i] = row;
         }

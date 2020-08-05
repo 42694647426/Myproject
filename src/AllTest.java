@@ -1,4 +1,3 @@
-import org.apache.commons.lang3.SerializationUtils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -8,13 +7,11 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.ui.ApplicationFrame;
-import org.jfree.ui.RefineryUtilities;
-import org.neuroph.core.NeuralNetwork;
 import org.neuroph.core.data.DataSet;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Random;
 
 public class AllTest {
@@ -22,6 +19,28 @@ public class AllTest {
 
     public AllTest(String sensor){
         this.sensor = sensor;
+    }
+
+    public static double[][] MovableData(int N){
+        double[][] data = new double[N][4];
+        for (int i =0; i<N; i++){
+            data[i][0] = Math.random()*2-1;//light sensor input
+            data[i][1] = new Random().nextInt(850)+150;
+            data[i][2] = new Random().nextInt(850)+150;
+            if(data[i][0] > 0&& data[i][1] >= 650){
+                data[i][3] = Math.random()*0.6+0.4; // non-movable
+            }
+            else if(data[i][1] <0 && data[i][2] >=650){
+                data[i][3] = Math.random()*0.6+0.4; // non-movable
+            }
+            else if(data[i][1] >=650&&data[i][2] >=650){
+                data[i][3] = Math.random()*0.6+0.4;
+            }
+            else {
+                data[i][3] = Math.random()*0.4;
+            }
+        }
+        return data;
     }
 
     public static double[][] BatteryData(int N){
@@ -56,21 +75,21 @@ public class AllTest {
             int random2 = rand.nextInt(850)+150;
             data[i][0] = random1;
             data[i][1] = random2;
-            if(random1>=280){
+            if(random1>=650){
                 //right wisker
-                data[i][2] = Math.random() * 5;
+                data[i][2] =  Math.random() *6 +9;
             }
-            else if(random2>=280){
+            else if(random2>=650){
                 //left wisker
-                data[i][3] = Math.random() * 5;
+                data[i][3] =  Math.random() *6 +9;
             }
-            else if(random1>=280&&random2>=280){
-                data[i][2] = Math.random() * 5;
-                data[i][3] = Math.random() * 5;
+            else if(random1>=650&&random2>=650){
+                data[i][2] =  Math.random() *6 +9;
+                data[i][3] =  Math.random() *6 +9;
             }
             else {
-                data[i][2] = Math.random() * 10+5;
-                data[i][3] = Math.random() * 10+5;
+                data[i][2] = Math.random() *9;
+                data[i][3] = Math.random() *9;
             }
         }
         return data;
@@ -210,7 +229,7 @@ public class AllTest {
                 int random = rand.nextInt(700) + 800;
                 double[][] lightdata = LightData(random);
                 LightSensor light = new LightSensor(lightdata);
-                light.train();;
+                light.train();
                 DataSet lighttrain = light.CreateSet(lightdata);
                 double train_accuracy = light.testnn(lighttrain, "train data for touch sensor");
                 trainseries.add(i + 1, train_accuracy);
@@ -221,6 +240,34 @@ public class AllTest {
                 double test_accuracy = light.testnn(lighttest, "test data for touch sensor");
                 testseries.add(i + 1, test_accuracy);
             }
+
+        }
+        else if (sensor.equals("IsMovable")){
+            for(int i =0; i<N; i++) {
+                Random rand = new Random();
+                int random = rand.nextInt(700) + 800;
+                double[][] movabledata = MovableData(random);
+                double[][] lightdata = LightData(random);
+                LightSensor light = new LightSensor(lightdata);
+                light.train();
+                double[][] touchdata = TouchData(random);
+                TouchSensor touch = new TouchSensor(touchdata);
+                touch.train();;
+                IsMovable move = new IsMovable(light.ann,touch.ann , movabledata);
+
+                move.train();
+                DataSet movetrain = move.CreateSet(movabledata);
+                double train_accuracy = move.testnn(movetrain, "train data for IsMovable");
+                trainseries.add(i + 1, train_accuracy);
+
+                random = rand.nextInt(500) + 500;
+                double[][] movedata2 = MovableData(random);
+                DataSet movetest = move.CreateSet(movedata2);
+                double test_accuracy = move.testnn(movetest, "test data for IsMovable");
+                testseries.add(i + 1, test_accuracy);
+            }
+            double[][] movabledata = MovableData(20);
+            System.out.println(Arrays.deepToString(movabledata));
 
         }
         else{
